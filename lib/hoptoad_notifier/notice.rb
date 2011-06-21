@@ -69,6 +69,8 @@ module HoptoadNotifier
     # The host name where this error occurred (if any)
     attr_reader :hostname
 
+    attr_reader :application
+
     def initialize(args)
       self.args         = args
       self.exception    = args[:exception]
@@ -96,7 +98,7 @@ module HoptoadNotifier
       self.backtrace        = Backtrace.parse(exception_attribute(:backtrace, caller), :filters => self.backtrace_filters)
       self.error_class      = exception_attribute(:error_class) {|exception| exception.class.name }
       self.error_message    = exception_attribute(:error_message, 'Notification') do |exception|
-        "#{exception.class.name}: #{exception.message}"
+        "[#{args[:application]}] #{exception.class.name}: #{exception.message}"
       end
 
       self.hostname        = local_hostname
@@ -192,7 +194,7 @@ module HoptoadNotifier
       :backtrace_filters, :parameters, :params_filters,
       :environment_filters, :session_data, :project_root, :url, :ignore,
       :ignore_by_filters, :notifier_name, :notifier_url, :notifier_version,
-      :component, :action, :cgi_data, :environment_name, :hostname
+      :component, :action, :cgi_data, :environment_name, :hostname, :application
 
     # Arguments given in the initializer
     attr_accessor :args

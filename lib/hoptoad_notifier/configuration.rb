@@ -8,7 +8,7 @@ module HoptoadNotifier
         :ignore_user_agent, :notifier_name, :notifier_url, :notifier_version,
         :params_filters, :project_root, :port, :protocol, :proxy_host,
         :proxy_pass, :proxy_port, :proxy_user, :secure, :framework,
-        :user_information].freeze
+        :user_information, :application].freeze
 
     # The API key for your project, found on the project edit form.
     attr_accessor :api_key
@@ -87,11 +87,14 @@ module HoptoadNotifier
     # The framework HoptoadNotifier is configured to use
     attr_accessor :framework
 
+    # Manually add application name prefix
+    attr_accessor :application
+
     DEFAULT_PARAMS_FILTERS = %w(password password_confirmation).freeze
 
     DEFAULT_BACKTRACE_FILTERS = [
       lambda { |line|
-        if defined?(HoptoadNotifier.configuration.project_root) && HoptoadNotifier.configuration.project_root.to_s != '' 
+        if defined?(HoptoadNotifier.configuration.project_root) && HoptoadNotifier.configuration.project_root.to_s != ''
           line.gsub(/#{HoptoadNotifier.configuration.project_root}/, "[PROJECT_ROOT]")
         else
           line
@@ -134,6 +137,7 @@ module HoptoadNotifier
       @notifier_url             = 'http://hoptoadapp.com'
       @framework                = 'Standalone'
       @user_information         = 'Hoptoad Error {{error_id}}'
+      @application              = 'Replace Me: Application Name'
     end
 
     # Takes a block and adds it to the list of backtrace filters. When the filters
